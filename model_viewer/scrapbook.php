@@ -1,0 +1,1 @@
+<p style="width: 100%; height: 50px;">Scrapbook View Stub.</p>
