@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Model Viewer Test Functionality</title>
+        <script async defer type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+        <style type="text/css">
+            model-viewer{
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="model-wrapper" style="width: 1280px; height: 768px;">
+            <model-viewer 
+                id="test_model"
+                alt="Toy car example using transmission, clearcoat, and sheen." 
+                src="model/ToyCar.glb" 
+                ar 
+                environment-image="" 
+                poster="" 
+                shadow-intensity="1" 
+                camera-controls 
+                touch-action="pan-y"
+                disable-pan
+                orbit-sensitivity="1"
+                zoom-sensitivity="1"
+                pan-sensitivity="1"
+                a11y="{}">
+                <div class="controls">
+                    <button id="zoomin" type="button">Zoom In</button>
+                    <button id="zoomout" type="button">Zoom Out</button>
+                </div>
+            </model-viewer>
+        </div>
+        <script>
+            'use strict';
+            const model = document.querySelector('#test_model');
+            document.querySelector('#zoomin').addEventListener('click',function(e){
+                model.zoom(1);
+            });
+            document.querySelector('#zoomout').addEventListener('click',function(e){
+                model.zoom(-1);
+            });
+        </script>
+    </body>
+</html>
