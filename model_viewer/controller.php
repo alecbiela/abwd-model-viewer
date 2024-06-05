@@ -4,6 +4,7 @@ use Concrete\Core\Block\BlockController;
 
 class Controller extends BlockController {
     protected $btTable = "btModelViewer";
+    protected $btDefaultSet = "multimedia";
     protected $btSupportsInlineAdd = false;
     protected $btSupportsInlineEdit = false;
     protected $btInterfaceWidth = "700";

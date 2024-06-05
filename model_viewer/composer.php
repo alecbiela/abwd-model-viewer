@@ -1,1 +1,3 @@
-<p style="width: 100%; height: 50px;">Composer View Stub.</p>
+<?php 
+    defined('C5_EXECUTE') or die('Access Denied.');
+    $this->inc('form.php');
