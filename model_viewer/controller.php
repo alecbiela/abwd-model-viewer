@@ -1,6 +1,8 @@
 <?php
 namespace Application\Block\ModelViewer;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\File\File;
 
 class Controller extends BlockController {
     protected $btTable = "btModelViewer";
@@ -21,119 +23,180 @@ class Controller extends BlockController {
     public function getBlockTypeDescription() { return t('Load, view, and control 3D models on your page.'); }
     public function getRequiredFeatures(): array { return [Features::FILES, Features::FORMS];}
 
-    private function getFileObject($id): ?\Concrete\Core\Entity\File\File {
+    private function getFileObject($id): ?\Concrete\Core\Entity\File\Version {
         return File::getByID($id)->getApprovedVersion();
     }
 
-    private function hydrateArgs(){
-        $args = [
-            "model" => [
-                "type" => 'glb',
-                "fileID" => 999,
-                "binaries" => 'included',
-                "binaryFileID" => -1,
-                "extras" => 'none',
-                "alt" => 'A test model alt text',
-                "posterFileID" => 998,
-                "loadingType" => 'auto',
-                "activationType" => 'auto'
-            ],
-            "controls" => [
-                "enable" => true,
-                "orbit" => true,
-                "orbitSensitivity" => 1,
-                "zoom" => true,
-                "zoomSensitivity" => 2,
-                "pan" => true,
-                "panSensitivity" => 1,
-                "uiControls" => true
-            ],
-            "style" => [
-                "bgColor" => '#333',
-                "dimensionType" => 'responsive',
-                "dimensionWidthValue" => '800',
-                "dimensionWidthUnits" => 'px',
-                "dimensionHeightValue" => '600',
-                "dimensionHeightUnits" => 'px',
-                "styling" => 'minimal'
-            ],
-            "accessibility" => [
-                "enable" => false,
-                "rules" => [
-                    "front" => "",
-                    "back" => "",
-                    "left" => "",
-                    "right" => "",
-                    "upper-front" => "",
-                    "upper-back" => "",
-                    "upper-left" => "",
-                    "upper-right" => "",
-                    "lower-front" => "",
-                    "lower-back" => "",
-                    "lower-left" => "",
-                    "lower-right" => "",
-                    "interaction-prompt" => ""
-                ]
-            ],
-            "ar" => [
-                "enable" => false,
-                "arScale" => 'auto',
-                "placement" => 'floor',
-                "xrEstimation" => false
-            ]    
-          ];
-    }
-
-    private function buildAttrString(){
+    /**
+     * Builds the attribute string to go inside <model-viewer>
+     * This is done at save-time so it doesn't need to be remade for view() calls
+     */
+    private function buildAttrString($data, $model, $poster, &$err){
         $attrArr = [];
-        $attrArr[] = 'id="model_viewport_'.$bID.'"';
-        $attrArr[] = 'class="model-viewer"';
-      
+        $classArr = [];
+        $styleArr = [];
+        $classArr[] = 'model-viewer';
         
         /* Parse the args into the attribute array */
         // Model data
-        $modelURL = './model/ToyCar.glb'; //TODO: replace file urls with C5 file getters
-        $posterURL = './model/ToyCar.png';
-        $attrArr[] = 'src="'.$modelURL.'"';
-        $attrArr[] = 'alt="'.$args["model"]["alt"].'"';
-        $attrArr[] = 'poster="'.$posterURL.'"';
-        $attrArr[] = 'loading="'.$args["model"]["loadingType"].'"';
-        $attrArr[] = 'reveal="'.$args["model"]["activationType"].'"';
+        $modelFile = $this->getFileObject($model);
+        if(strtolower($modelFile->getExtension()) !== 'glb' && strtolower($modelFile->getExtension()) !== 'gltf'){
+            $err->add(t('Invalid model file - you must use a model with a .glb or a .gltf file extension.'));
+            return;
+        }else $attrArr[] = 'src="'.$modelFile->getURL().'"';
+
+        if($poster > 0){
+            $attrArr[] = 'poster="'.$this->getFileObject($poster)->getURL().'"';
+        }
+        $attrArr[] = 'alt="'.$data["model"]["alt"].'"';
+        $attrArr[] = 'loading="'.$data["model"]["loadingType"].'"';
+        $attrArr[] = 'reveal="'.$data["model"]["activationType"].'"';
       
         // Controls
-        if($args["controls"]["enable"] === true) $attrArr[] = 'camera-controls';
-        if($args["controls"]["orbit"] === false) $attrArr[] = 'disable-orbit';
-        else $attrArr[] = 'orbit-sensitivity="'.$args["controls"]["orbitSensitivity"].'"';
-        if($args["controls"]["zoom"] === false) $attrArr[] = 'disable-zoom';
-        else $attrArr[] = 'zoom-sensitivity="'.$args["controls"]["zoomSensitivity"].'"'; 
-        if($args["controls"]["pan"] === false) $attrArr[] = 'disable-pan';
-        else $attrArr[] = 'pan-sensitivity="'.$args["controls"]["panSensitivity"].'"'; 
+        if($data["controls"]["enableOrbit"] || 
+        $data["controls"]["enableZoom"] || 
+        $data["controls"]["enablePan"] || 
+        $data["controls"]["enableButtons"]) $attrArr[] = 'camera-controls';
+
+        if(!$data["controls"]["enableOrbit"]) $attrArr[] = 'disable-orbit';
+        else $attrArr[] = 'orbit-sensitivity="'.$data["controls"]["orbitSensitivity"].'"';
+        if(!$data["controls"]["enableZoom"]) $attrArr[] = 'disable-zoom';
+        else $attrArr[] = 'zoom-sensitivity="'.$data["controls"]["zoomSensitivity"].'"';
+        if(!$data["controls"]["enablePan"]) $attrArr[] = 'disable-pan';
+        else $attrArr[] = 'pan-sensitivity="'.$data["controls"]["panSensitivity"].'"';
+
+        if($data["controls"]["enableButtons"] === true) $classArr[] = 'ui-buttons';
       
         // Style
-        //TODO: Add logic for handling responsive vs fixed styles
+        if($data["style"]["backgroundColor"] !== '') $styleArr[] = 'background: '.$data["style"]['backgroundColor'].';';
+        if($data["style"]["isResponsive"]) $classArr[] = 'responsive';
+        else{
+            $units = array('px'=>'px', 'pc'=>'%');
+            $styleArr[] = 'width: '.$data["style"]["dimensionWidthValue"].$units[$data["style"]["dimensionWidthUnits"]].';';
+            $styleArr[] = 'height: '.$data["style"]["dimensionHeightValue"].$units[$data["style"]["dimensionHeightUnits"]].';';
+        }
+        $classArr[] = 'styling-'.$data["style"]["styling"];
       
         // A11y
-        if($args["accessibility"]["enable"] === true) $attrArr[] = 'a11y="'.json_encode($args["accessibility"]["rules"]).'"';
-      
-        // AR
-        if($args["ar"]["enable"] === true){
-          $attrArr[] = 'ar';
-          $attrArr[] = 'ar-scale="'.$args["ar"]["arScale"].'"';
-          $attrArr[] = 'ar-placement='.$args["ar"]["placement"].'"';
-          if($args["ar"]["xrEstimation"] === true) $attrArr[] = 'xr-environment';
+        if($data["accessibility"]["enableA11y"]){
+            $attrArr[] = 'a11y="'.json_encode($data["accessibility"]["a11yRules"]).'"';
         }
+
+        // AR
+        if($data["ar"]["enableAR"]){
+            $attrArr[] = 'ar';
+            if($data["ar"]["enableResizingAR"]) $attrArr[] = 'ar-scale="auto"';
+            else $attrArr[] = 'ar-scale="fixed"';
+            if($data["ar"]["enableEstimationAR"]) $attrArr[] = 'xr-environment';
+            $attrArr[] = 'ar-placement="'.$data["ar"]["placementAR"].'"';
+        }
+
+        // Combine
+        if(!empty($classArr)) $attrArr[] = 'class="'.implode(' ', $classArr).'"';
+        if(!empty($styleArr)) $attrArr[] = 'style="'.implode(' ', $styleArr).'"';
+
+        $attrStr = implode(' ', $attrArr);
+        return gzdeflate($attrStr);
     }
 
-    public function save($data){
-        $args = [
-            'fileID' => max(0, (int) $data['fileID']),
-            'binaryFileID' => max(0, (int) $data['binaryFileID']),
-            'posterFileID' => max(0, (int) $data['posterFileID']),
+    /**
+     * Format args for storage in a single database column
+     */
+    private function formatArgs($data){
+        $bSettings = [
+            "model" => [
+                "type" => $data["type"],
+                "alt" => $data["alt"],
+                "activationType" => $data["activationType"],
+                "loadingType" => $data["loadingType"]
+            ],
+            "controls" => [
+                "enableOrbit" => (array_key_exists('enableOrbit', $data) && $data["enableOrbit"] === 'yes'),
+                "orbitSensitivity" => $data["orbitSensitivity"],
+                "enableZoom" => (array_key_exists('enableZoom', $data) && $data["enableZoom"] === 'yes'),
+                "zoomSensitivity" => $data["zoomSensitivity"],
+                "enablePan" => (array_key_exists('enablePan', $data) && $data["enablePan"] === 'yes'),
+                "panSensitivity" => $data["panSensitivity"],
+                "enableButtons" => (array_key_exists('enableButtons', $data) && $data["enableButtons"] === 'yes')
+            ],
+            "style" => [
+                "backgroundColor" => $data["backgroundColor"],
+                "isResponsive" => (array_key_exists('isResponsive', $data) && $data["isResponsive"] === 'yes'),
+                "dimensionWidthValue" => (array_key_exists('dimensionWidthValue', $data)) ? $data["dimensionWidthValue"] : '100',
+                "dimensionWidthUnits" => (array_key_exists('dimensionWidthUnits', $data)) ? $data["dimensionWidthUnits"] : 'px',
+                "dimensionHeightValue" => (array_key_exists('dimensionHeightValue', $data)) ? $data["dimensionWidthValue"] : '100',
+                "dimensionHeightUnits" => (array_key_exists('dimensionHeightUnits', $data)) ? $data["dimensionHeightUnits"] : 'px',
+                "styling" => 'minimal'
+            ],
+            "accessibility" => [
+                "enableA11y" => (array_key_exists('enableA11y', $data) && $data["enableA11y"] === 'yes'),
+            ],
+            "ar" => [
+                "enableAR" => (array_key_exists('enableAR', $data) && $data["enableAR"] === 'yes'),
+                "enableResizingAR" => (array_key_exists('enableResizingAR', $data) && $data["enableResizingAR"] === 'yes'),
+                "enableEstimationAR" => (array_key_exists('enableEstimationAR', $data) && $data["enableEstimationAR"] === 'yes'),
+                "placementAR" => (array_key_exists('placementAR', $data)) ? $data["placementAR"] : ''
+            ]    
         ];
+        if($bSettings["accessibility"]["enableA11y"] === true){
+            $a11yRules = array('a11yRules' => [
+                'interaction-prompt' => $data["a11yInteractionPrompt"],
+                'front' => $data["a11yFront"],
+                'back' => $data["a11yBack"],
+                'left' => $data["a11yLeft"],
+                'right' => $data["a11yRight"],
+                'upper-front' => $data["a11yUpperFront"],
+                'upper-back' => $data["a11yUpperBack"],
+                'upper-left' => $data["a11yUpperLeft"],
+                'upper-right' => $data["a11yUpperRight"],
+                'lower-front' => $data["a11yLowerFront"],
+                'lower-back' => $data["a11yLowerBack"],
+                'lower-left' => $data["a11yLowerLeft"],
+                'lower-right' => $data["a11yLowerRight"]
+            ]);
+            $bSettings = array_merge($bSettings["accessibility"], $a11yRules);
+        }
+        
+        return $bSettings;
+    }
+
+    /**
+     * Builds attribute string and saves data to the database
+     */
+    public function save($data){
+        // $err is passed by reference to the functions below
+        $app = Application::getFacadeApplication();
+        $err = $app->make('helper/validation/error');
+
+        // Model file is required at a bare minimum
+        if(max(0, (int) $data['fileID']) > 0){
+            $bSettings = $this->formatArgs($data, $err);
+            $aString = $this->buildAttrString($bSettings, $data["fileID"], $data["posterFileID"], $err);
+            $args = [
+                'fileID' => max(0, (int) $data['fileID']),
+                'binaryFileID' => max(0, (int) $data['binaryFileID']),
+                'posterFileID' => max(0, (int) $data['posterFileID']),
+                'bSettings' => json_encode($bSettings),
+                'aString' => $aString
+            ];
+        } else $err->add(t('You must specify a 3D model file.'));
+
+        if($err->has()){
+            print t('There were errors with saving the 3D Model Block:');
+            $err->output();
+            die();
+        }
+
         parent::save($args);
     }
 
+    /**
+     * Runs when the block is loaded on the frontend for display
+     */
     public function view(){
-
+        // Set a bID field, we need to set the id of the block in the view
+        // Append styles to header, or maybe do that in the package controller eventually?
+        // Remember to gzinflate the attr string!
+        $this->set('attrString', gzinflate($this->aString));
     }
 }

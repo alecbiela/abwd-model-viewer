@@ -36,7 +36,7 @@ $fileManager = $app->make(FileManager::class);
             </div>
             <div class="col-6">
                 <?= $form->label('posterFileID', t('Poster Image')); ?>
-                <?= $fileManager->image('ccm-b-poster-file', 'posterfID', t('Choose Poster Image'), null); ?>
+                <?= $fileManager->image('ccm-b-poster-file', 'posterFileID', t('Choose Poster Image'), null); ?>
             </div>
         </div>
         <div class="row mb-3">

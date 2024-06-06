@@ -18,5 +18,6 @@
             <default value="0" />
         </field>
         <field name="bSettings" type="json_array"/>
+        <field name="aString" type="blob" />
     </table>
 </schema>
