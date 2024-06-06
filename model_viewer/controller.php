@@ -65,7 +65,7 @@ class Controller extends BlockController {
         if(!$data["controls"]["enablePan"]) $attrArr[] = 'disable-pan';
         else $attrArr[] = 'pan-sensitivity="'.$data["controls"]["panSensitivity"].'"';
 
-        if($data["controls"]["enableButtons"] === true) $classArr[] = 'ui-buttons';
+        if($data["controls"]["enableButtons"] === true) $attrArr[] = 'ui-buttons';
       
         // Style
         if($data["style"]["backgroundColor"] !== '') $styleArr[] = 'background: '.$data["style"]['backgroundColor'].';';
@@ -282,7 +282,8 @@ class Controller extends BlockController {
      * Runs when the block is loaded on the frontend for display
      */
     public function view(){
-        // Append styles to header, or maybe do that in the package controller eventually?
-        $this->set('attrString', gzinflate($this->aString));
+        // TODO: Append styles to header, or maybe do that in the package controller eventually?
+        $attrString = gzinflate($this->aString);
+        $this->set('attrString', $attrString);
     }
 }

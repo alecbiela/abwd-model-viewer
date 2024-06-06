@@ -99,8 +99,8 @@
     <model-viewer <?= implode(' ', $attrArr); ?>>
         <?php if($args["controls"]["uiControls"] === true) { ?>
             <div class="controls">
-                <button id="zoomin" type="button">Zoom In</button>
-                <button id="zoomout" type="button">Zoom Out</button>
+                <button id="zoomin" type="button" data-sensitivity="2">Zoom In</button>
+                <button id="zoomout" type="button" data-sensitivity="-2">Zoom Out</button>
             </div>
         <?php } ?>
     </model-viewer>
