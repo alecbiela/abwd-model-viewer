@@ -45,7 +45,7 @@ class Controller extends BlockController {
             return;
         }else $attrArr[] = 'src="'.$modelFile->getURL().'"';
 
-        if($poster > 0){
+        if(max(0, (int) $poster) > 0){
             $attrArr[] = 'poster="'.$this->getFileObject($poster)->getURL().'"';
         }
         $attrArr[] = 'alt="'.$data["model"]["alt"].'"';
@@ -191,12 +191,98 @@ class Controller extends BlockController {
     }
 
     /**
+     * Runs when adding a new instance of this block
+     */
+    public function add(){
+        $defaults = array(
+            'ar' => [
+                'enableAR' => false,
+                'placementAR' => 'floor',
+                'enableResizingAR' => false,
+                'enableEstimationAR' => false
+            ],
+            'model' => [
+                'alt' => '',
+                'type' => 'glb',
+                'loadingType' => 'auto',
+                'activationType' => 'auto'
+            ],
+            'style' => [
+                'styling' => 'minimal',
+                'isResponsive' => false,
+                'backgroundColor' => '',
+                'dimensionWidthUnits' => 'px',
+                'dimensionHeightUnits' => 'px',
+                'dimensionWidthValue' => '',
+                'dimensionHeightValue' => ''
+            ],
+            'controls' => [
+                'enablePan' => true,
+                'enableZoom' => true,
+                'enableOrbit' => true,
+                'enableButtons' => false,
+                'panSensitivity' => '1.0',
+                'zoomSensitivity' => '1.0',
+                'orbitSensitivity' => '0'
+            ],
+            'accessibility' => [
+                'enableA11y' => false,
+                'a11yRules' => [
+                    'interaction-prompt' => '',
+                    'front' => '',
+                    'back' => '',
+                    'left' => '',
+                    'right' => '',
+                    'upper-front' => '',
+                    'upper-back' => '',
+                    'upper-left' => '',
+                    'upper-right' => '',
+                    'lower-front' => '',
+                    'lower-back' => '',
+                    'lower-left' => '',
+                    'lower-right' => ''
+                ]
+            ]
+        );
+        $this->set('blockData', $defaults);
+        $this->set('fileID', null);
+        $this->set('binaryFileID', null);
+        $this->set('posterFileID', null);
+    }
+
+    /**
+     * Runs when an existing instance of a block is edited
+     */
+    public function edit(){
+        $blockData = json_decode($this->bSettings, true);
+        if(!$blockData["accessibility"]["enableA11y"]){
+            $blockData["accessibility"]["a11yRules"] = [
+                'interaction-prompt' => '',
+                'front' => '',
+                'back' => '',
+                'left' => '',
+                'right' => '',
+                'upper-front' => '',
+                'upper-back' => '',
+                'upper-left' => '',
+                'upper-right' => '',
+                'lower-front' => '',
+                'lower-back' => '',
+                'lower-left' => '',
+                'lower-right' => ''
+            ];
+        }
+        $this->set('blockData', $blockData);
+        $this->set('fileID', $this->fileID);
+        $this->set('binaryFileID', $this->binaryFileID);
+        $this->set('posterFileID', $this->posterFileID);
+    }
+
+    /**
      * Runs when the block is loaded on the frontend for display
      */
     public function view(){
-        // Set a bID field, we need to set the id of the block in the view
         // Append styles to header, or maybe do that in the package controller eventually?
-        // Remember to gzinflate the attr string!
         $this->set('attrString', gzinflate($this->aString));
     }
 }
