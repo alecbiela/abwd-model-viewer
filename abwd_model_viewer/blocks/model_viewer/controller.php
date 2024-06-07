@@ -282,8 +282,14 @@ class Controller extends BlockController {
      * Runs when the block is loaded on the frontend for display
      */
     public function view(){
-        // TODO: Append styles to header, or maybe do that in the package controller eventually?
         $attrString = gzinflate($this->aString);
         $this->set('attrString', $attrString);
+    }
+
+    /**
+     * Registers necessary css and javascript for the block
+     */
+    public function registerViewAssets($outputContent = ''){
+        $this->requireAsset('abwd-model-viewer');
     }
 }
