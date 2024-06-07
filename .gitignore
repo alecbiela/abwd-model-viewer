@@ -4,6 +4,7 @@ model/
 # Node artifact files
 node_modules/
 dist/
+build/node_modules/
 
 # IDEs
 .idea/

@@ -1,5 +1,5 @@
 <?php
-namespace Application\Block\ModelViewer;
+namespace Concrete\Package\AbwdModelViewer\Block\ModelViewer;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\File\File;

@@ -36,8 +36,8 @@ class Controller extends Package
 
     public function install()
     {
-        if (version_compare(phpversion(), $phpVersionRequired, '<')) {
-            throw new \Exception('This package requires a minimum PHP version of '.$phpVersionRequired.' to run correctly.');
+        if (version_compare(phpversion(), $this->phpVersionRequired, '<')) {
+            throw new \Exception('This package requires a minimum PHP version of '.$this->phpVersionRequired.' to run correctly.');
         }
         $pkg = parent::install();
         $this->installOrUpgrade($pkg);
