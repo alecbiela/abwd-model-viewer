@@ -51,13 +51,7 @@ class Controller extends Package
     public function on_start(){
         //TODO: Test if js assets can be loaded in the footer
         $al = AssetList::getInstance();
-        $al->register('javascript', 'google-model-viewer', 'https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js', array('version' => '3.5.0', 'position' => Asset::ASSET_POSITION_HEADER, 'local' => false));
-        $al->register('javascript', 'abwd-model-viewer', 'js/viewer.min.js', array('version' => '1.0.0', 'position' => Asset::ASSET_POSITION_HEADER), 'abwd_model_viewer');
+        $al->register('javascript', 'abwd-model-viewer', 'js/viewer.min.js', array('version' => '1.0.0'), 'abwd_model_viewer');
         $al->register('css', 'abwd-model-viewer', 'css/viewer.min.css', array('version' => '1.0.0'), 'abwd_model_viewer');
-        $al->registerGroup('abwd-model-viewer', array(
-            'css' => 'abwd-model-viewer',
-            'javascript' => 'google-model-viewer',
-            'javascript' => 'abwd-model-viewer'
-        ));
     }
 }

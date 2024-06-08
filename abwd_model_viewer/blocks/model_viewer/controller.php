@@ -223,7 +223,7 @@ class Controller extends BlockController {
                 'enableButtons' => false,
                 'panSensitivity' => '1.0',
                 'zoomSensitivity' => '1.0',
-                'orbitSensitivity' => '0'
+                'orbitSensitivity' => '1.0'
             ],
             'accessibility' => [
                 'enableA11y' => false,
@@ -290,6 +290,9 @@ class Controller extends BlockController {
      * Registers necessary css and javascript for the block
      */
     public function registerViewAssets($outputContent = ''){
-        $this->requireAsset('abwd-model-viewer');
+        // Concrete doesn't natively support type="module", so can't use the asset loader
+        $this->addHeaderItem('<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>');
+        $this->requireAsset('javascript', 'abwd-model-viewer');
+        $this->requireAsset('css', 'abwd-model-viewer');
     }
 }
