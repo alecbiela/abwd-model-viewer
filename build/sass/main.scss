@@ -1,0 +1,89 @@
+@use 'font';
+.model-container{
+    .model-viewer{
+        position: relative; z-index: 0;
+        &.responsive{width: 100vw; max-width: 100%; height: 56.25vw; max-height: 80vh;}
+        .controls{
+            display: none;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            align-items: center;
+            row-gap: 10px;
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            right: 0;
+            padding: 8px;
+            border-radius: 5px;
+            background: rgba(200,200,200,0.5);
+
+            button{background: #333; border: 1px solid #333; border-radius: 3px; color: white; transition: all 300ms ease;
+                &:hover, &:focus{background: white; color: #333;}
+            }
+
+            .orbits{
+                width: 94px; 
+                height: 94px;
+                position: relative;
+                .orbit-up-button{position: absolute; top: 0; left: 50%; transform: translateX(-50%);}
+                .orbit-left-button{position: absolute; top: 50%; left: 0; transform: translateY(-50%);}
+                .orbit-right-button{position: absolute; top: 50%; right: 0; transform: translateY(-50%);}
+                .orbit-down-button{position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);}
+            }
+        }
+
+        // Selectively enable visibility of buttons based on block options
+        &.loaded[ui-buttons]{
+            .controls{display: flex;}
+            &[disable-pan] .pans{display: none;}
+            &[disable-zoom] .zooms{display: none;}
+            &[disable-orbit] .orbits{display: none;}
+        }
+
+
+        .error-overlay{
+            display: none;
+            position: absolute;
+            z-index: 10;
+            background: #333;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            .error-text{
+                position: absolute;
+                z-index: 6;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                color: white;
+                font-size: 80px;
+                text-align: center;
+                i{display: inline-block; margin: auto;
+                    &::before{margin: 0; padding: 0; width: 80px; height: 80px; display: block;}
+                }
+                p{font-size: 36px;
+                    small{font-size: 20px;}
+                }
+            }
+        }
+        &.has-error{
+            .error-overlay{display: block;}
+        }
+    }
+    /* Derived from twbs/bootstrap */
+    .sr-only {
+        border: 0;
+        clip: rect(0, 0, 0, 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+}
+
+@media(max-width: 576px){
+    .model-container .model-viewer[ui-buttons] .controls{display: none;}
+}

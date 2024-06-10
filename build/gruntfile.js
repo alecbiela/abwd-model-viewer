@@ -35,8 +35,6 @@ module.exports = function (grunt) {
 				sourceMap: true
 			},
 			target: {
-				banner: '/*! Copyright (C) 2024 Alec Bielanos ' +
-					'<%= grunt.template.today("dd-mm-yyyy") %> */\n',
 				src: '<%= dirs.src.sass %>/main.scss',
 				dest: '<%= dirs.dest.css %>/viewer.min.css'
 			}

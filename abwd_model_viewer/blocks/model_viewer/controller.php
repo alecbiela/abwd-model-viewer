@@ -121,7 +121,7 @@ class Controller extends BlockController {
             ],
             "style" => [
                 "backgroundColor" => $data["backgroundColor"],
-                "isResponsive" => (array_key_exists('isResponsive', $data) && $data["isResponsive"] === 'yes'),
+                "isResponsive" => (isset($data['isResponsive']) && $data['isResponsive'] === 'yes'),
                 "dimensionWidthValue" => (array_key_exists('dimensionWidthValue', $data)) ? $data["dimensionWidthValue"] : '100',
                 "dimensionWidthUnits" => (array_key_exists('dimensionWidthUnits', $data)) ? $data["dimensionWidthUnits"] : 'px',
                 "dimensionHeightValue" => (array_key_exists('dimensionHeightValue', $data)) ? $data["dimensionWidthValue"] : '100',
@@ -164,6 +164,7 @@ class Controller extends BlockController {
      * Builds attribute string and saves data to the database
      */
     public function save($data){
+        //TODO: validation for certain required elements (i.e. responsive styling OR set width and height)
         // $err is passed by reference to the functions below
         $app = Application::getFacadeApplication();
         $err = $app->make('helper/validation/error');
@@ -291,7 +292,9 @@ class Controller extends BlockController {
      */
     public function registerViewAssets($outputContent = ''){
         // Concrete doesn't natively support type="module", so can't use the asset loader
-        $this->addHeaderItem('<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>');
+        //https://github.com/google/model-viewer/blob/master/LICENSE
+        $this->requireAsset('javascript-inline', 'meshopt-support');
+        $this->requireAsset('javascript-module', 'google-model-viewer');
         $this->requireAsset('javascript', 'abwd-model-viewer');
         $this->requireAsset('css', 'abwd-model-viewer');
     }

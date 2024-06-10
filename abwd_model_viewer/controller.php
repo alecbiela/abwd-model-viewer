@@ -7,6 +7,7 @@ use \Concrete\Core\Package\Package;
 use \Concrete\Core\Block\BlockType\BlockType;
 use \Concrete\Core\Asset\AssetList;
 use \Concrete\Core\Asset\Asset;
+use \Concrete\Package\AbwdModelViewer\Asset\JavascriptModuleAsset;
 
 
 class Controller extends Package
@@ -15,6 +16,7 @@ class Controller extends Package
     protected $appVersionRequired = '9.3.2';
     protected $phpVersionRequired = '7.4.36';
     protected $pkgVersion = '1.0';
+    protected $pkgAutoloaderRegistries = array('src/Asset' => 'Concrete\Package\AbwdModelViewer\Asset');
 
     public function getPackageDescription()
     {
@@ -49,9 +51,13 @@ class Controller extends Package
     }
 
     public function on_start(){
-        //TODO: Test if js assets can be loaded in the footer
         $al = AssetList::getInstance();
         $al->register('javascript', 'abwd-model-viewer', 'js/viewer.min.js', array('version' => '1.0.0'), 'abwd_model_viewer');
         $al->register('css', 'abwd-model-viewer', 'css/viewer.min.css', array('version' => '1.0.0'), 'abwd_model_viewer');
+        $al->register('javascript-inline', 'meshopt-support', 'self.ModelViewerElement = self.ModelViewerElement || {}; self.ModelViewerElement.meshoptDecoderLocation = "https://cdn.jsdelivr.net/npm/meshoptimizer/meshopt_decoder.js"', array('version' => '0.20.0', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false), 'abwd_model_viewer');
+
+        $o = new JavascriptModuleAsset('google-model-viewer');
+        $o->register('https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js', array('version' => '3.5.0'), 'abwd_model_viewer');
+        $al->registerAsset($o);
     }
 }
