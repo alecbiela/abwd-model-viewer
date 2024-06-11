@@ -1,5 +1,8 @@
 <?php
 namespace Concrete\Package\AbwdModelViewer\Asset;
+
+defined('C5_EXECUTE') or die('Access Denied.');
+
 use \Concrete\Core\Asset\JavascriptAsset;
 use HtmlObject\Element;
 

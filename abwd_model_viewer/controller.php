@@ -16,7 +16,7 @@ class Controller extends Package
     protected $pkgHandle = 'abwd_model_viewer';
     protected $appVersionRequired = '9.3.2';
     protected $phpVersionRequired = '7.4.36';
-    protected $pkgVersion = '1.0.0';
+    protected $pkgVersion = '0.9.0';
     protected $pkgAutoloaderRegistries = array('src/Asset' => 'Concrete\Package\AbwdModelViewer\Asset');
 
     public function getPackageDescription()

@@ -32,7 +32,7 @@ module.exports = function (grunt) {
 			options: {
                 implementation: sass,
 				outputStyle: 'compressed',
-				sourceMap: true
+				sourceMap: false	//change to true for development
 			},
 			target: {
 				src: '<%= dirs.src.sass %>/main.scss',
@@ -46,7 +46,7 @@ module.exports = function (grunt) {
 					'<%= grunt.template.today("dd-mm-yyyy") %> */\n',
 				compress: true,
 				mangle: true,
-				sourceMap: true
+				sourceMap: false //change to true for development
 			},
 			target: {
 				src: ['<%= dirs.src.js %>/main.js'],

@@ -48,10 +48,10 @@ $fileManager = $app->make(FileManager::class);
                 <?= $form->label('fileID', t('Model File')); ?>
                 <?= $fileManager->file('ccm-b-file', 'fileID', t('Choose Model File'), $fileID); ?>
             </div>
-            <div class="col-6">
+            <?php /*<div class="col-6">
                 <?= $form->label('binaryFileID', t('Model Binary (.bin)')); ?>
                 <?= $fileManager->file('ccm-b-binary-file', 'binaryFileID', t('Choose Model Binary'), $binaryFileID); ?>
-            </div>
+            </div> */ ?>
         </div>
         <div class="form-group">
             <?= $form->label('alt', t('Alternative Text')); ?>
@@ -59,11 +59,11 @@ $fileManager = $app->make(FileManager::class);
         </div>
         <div class="form-group">
             <?= $form->label('activationType', t('Viewer Initialization')); ?>
-            <?= $form->select('activationType', array('auto'=>'Automatically when model loads','manual'=>'Manual (when a button is clicked)'), $blockData["model"]["activationType"]); ?>
+            <?= $form->select('activationType', array('auto'=>t('Automatically when model loads'),'manual'=>t('Manual (when a button is clicked)')), $blockData["model"]["activationType"]); ?>
         </div>
         <div class="form-group">
             <?= $form->label('loadingType', t('Loading Style')); ?>
-            <?= $form->select('loadingType', array('auto'=>'Auto (Load whenever viewer initializes)','eager'=>'Eager (Load as soon as possible)','lazy'=>'Lazy (Load when scrolling into view)'), $blockData["model"]["loadingType"]); ?>
+            <?= $form->select('loadingType', array('auto'=>t('Auto (Load whenever viewer initializes)'),'eager'=>t('Eager (Load as soon as possible)'),'lazy'=>t('Lazy (Load when scrolling into view)')), $blockData["model"]["loadingType"]); ?>
         </div>
     </fieldset>
   </div>
@@ -236,10 +236,8 @@ $fileManager = $app->make(FileManager::class);
 </div>
 <script>
     'use strict';
-    $('#enableOrbit').change(function(){
-        //if(this.checked) $('#orbit_sensitivity_dd').slideDown(500);
-        //else $('#orbit_sensitivity_dd').slideUp(500);
-    });
+
+    // Event listeners
     $('#orbitSensitivity').on('input',function(){
         $('#orbitSensitivity_display').text(this.value);
     });
@@ -262,6 +260,7 @@ $fileManager = $app->make(FileManager::class);
         else $('.ar-input').removeClass('disabled').removeAttr('disabled');
     });
 
+    // Sync display values with inputs
     $('#enableA11y, #isResponsive, #enableAR').trigger('change');
     $('#orbitSensitivity, #zoomSensitivity, #panSensitivity').trigger('input');
 </script>

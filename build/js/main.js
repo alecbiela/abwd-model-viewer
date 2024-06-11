@@ -62,7 +62,6 @@ window.onload = (() => {
                 // If pan enabled, register pan buttons
                 // Pan buttons may be added in a future update
                 /*if(viewer.getAttribute('disable-pan') === null){
-
                 }*/
 
                 // Resets camera to initial
