@@ -4,6 +4,8 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\File\File;
 
+defined('C5_EXECUTE') or die('Access Denied.');
+
 class Controller extends BlockController {
     protected $btTable = "btModelViewer";
     protected $btDefaultSet = "multimedia";

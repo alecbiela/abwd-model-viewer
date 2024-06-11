@@ -85,5 +85,5 @@
 }
 
 @media(max-width: 576px){
-    .model-container .model-viewer[ui-buttons] .controls{display: none;}
+    .model-container .model-viewer.loaded[ui-buttons] .controls{display: none;}
 }

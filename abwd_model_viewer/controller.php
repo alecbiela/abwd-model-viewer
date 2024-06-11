@@ -3,19 +3,20 @@ namespace Concrete\Package\AbwdModelViewer;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
+use \Config;
 use \Concrete\Core\Package\Package;
 use \Concrete\Core\Block\BlockType\BlockType;
 use \Concrete\Core\Asset\AssetList;
 use \Concrete\Core\Asset\Asset;
+use Concrete\Core\Support\Facade\Application;
 use \Concrete\Package\AbwdModelViewer\Asset\JavascriptModuleAsset;
-
 
 class Controller extends Package
 {
     protected $pkgHandle = 'abwd_model_viewer';
     protected $appVersionRequired = '9.3.2';
     protected $phpVersionRequired = '7.4.36';
-    protected $pkgVersion = '1.0';
+    protected $pkgVersion = '1.0.0';
     protected $pkgAutoloaderRegistries = array('src/Asset' => 'Concrete\Package\AbwdModelViewer\Asset');
 
     public function getPackageDescription()
@@ -30,10 +31,24 @@ class Controller extends Package
 
     private function installOrUpgrade($pkg = null){
         if(is_null($pkg)) $pkg = Package::getByHandle('abwd_model_viewer');
+
+        // Add block type if it doesn't exist yet
         $bt = BlockType::getByHandle('model_viewer');
         if (!is_object($bt)) {
             $bt = BlockType::installBlockType('model_viewer', $pkg);
         }
+
+        // Add glb and gltf to allowed file manager types if they aren't yet
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
+        $helper_file = $app->make('helper/concrete/file');
+        
+        $file_access_file_types = $helper_file->unserializeUploadFileExtensions($config->get('concrete.upload.extensions'));
+        if(!in_array('glb', $file_access_file_types)) $file_access_file_types[] = 'glb';
+        if(!in_array('gltf', $file_access_file_types)) $file_access_file_types[] = 'gltf';
+
+        $types = $helper_file->serializeUploadFileExtensions($file_access_file_types);
+        Config::save('concrete.upload.extensions', $types);
     }
 
     public function install()
@@ -48,6 +63,27 @@ class Controller extends Package
     public function upgrade(){
         parent::upgrade();
         $this->installOrUpgrade();
+    }
+
+    public function uninstall(){
+        parent::uninstall();
+
+        // Remove glb and gltf from allowed file manager types
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
+        $helper_file = $app->make('helper/concrete/file');
+        
+        $file_access_file_types = $helper_file->unserializeUploadFileExtensions($config->get('concrete.upload.extensions'));
+
+        if (($key = array_search('glb', $file_access_file_types)) !== false) {
+            unset($file_access_file_types[$key]);
+        }
+        if (($key = array_search('gltf', $file_access_file_types)) !== false) {
+            unset($file_access_file_types[$key]);
+        }
+
+        $types = $helper_file->serializeUploadFileExtensions($file_access_file_types);
+        Config::save('concrete.upload.extensions', $types);
     }
 
     public function on_start(){

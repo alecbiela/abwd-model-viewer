@@ -12,7 +12,7 @@ window.onload = (() => {
                     zoom: parseFloat(viewer.getAttribute('zoom-sensitivity')),
                     orbit: parseFloat(viewer.getAttribute('orbit-sensitivity')),
                     pan_mod: 0.01,
-                    zoom_mod: 2,
+                    zoom_mod: 3,
                     orbit_mod: 0.5
                 };
                 viewer.addEventListener('load', () => {

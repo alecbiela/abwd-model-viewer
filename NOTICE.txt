@@ -1,0 +1,12 @@
+ABWD Model Viewer
+Copyright 2024 Alec Bielanos.
+
+This product includes software developed by
+Alec Bielanos (https://ab-web.dev/), and is distributed under the Apache License, version 2.0.
+See "LICENSE.txt" for further information.
+
+The file "icon.png" is derived from Bootstrap Icons, which is distributed under the MIT license.
+See "LICENSE.icon.txt" for further information.
+
+This project contains code derived from the ConcreteCMS project, which is distributed under the MIT license.
+See "LICENSE.ccms.txt" for further information.
