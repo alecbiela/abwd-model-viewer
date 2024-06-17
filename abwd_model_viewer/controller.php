@@ -8,20 +8,19 @@ use \Concrete\Core\Package\Package;
 use \Concrete\Core\Block\BlockType\BlockType;
 use \Concrete\Core\Asset\AssetList;
 use \Concrete\Core\Asset\Asset;
-use Concrete\Core\Support\Facade\Application;
 use \Concrete\Package\AbwdModelViewer\Asset\JavascriptModuleAsset;
 
 class Controller extends Package
 {
     protected $pkgHandle = 'abwd_model_viewer';
-    protected $appVersionRequired = '9.3.2';
-    protected $phpVersionRequired = '7.4.36';
-    protected $pkgVersion = '0.9.0';
+    protected $appVersionRequired = '9.0.0';
+    protected $phpVersionRequired = '7.4.26';
+    protected $pkgVersion = '0.9.1';
     protected $pkgAutoloaderRegistries = array('src/Asset' => 'Concrete\Package\AbwdModelViewer\Asset');
 
     public function getPackageDescription()
     {
-        return t('Adds a 3D model viewer block to the editor. Supports .glb and .gltf model files.');
+        return t('Adds a 3D model viewer block to the editor. Supports .glb and embedded .gltf model files.');
     }
 
     public function getPackageName()
@@ -39,9 +38,8 @@ class Controller extends Package
         }
 
         // Add glb and gltf to allowed file manager types if they aren't yet
-        $app = Application::getFacadeApplication();
-        $config = $app->make('config');
-        $helper_file = $app->make('helper/concrete/file');
+        $config = $this->app->make('config');
+        $helper_file = $this->app->make('helper/concrete/file');
         
         $file_access_file_types = $helper_file->unserializeUploadFileExtensions($config->get('concrete.upload.extensions'));
         if(!in_array('glb', $file_access_file_types)) $file_access_file_types[] = 'glb';
@@ -54,7 +52,7 @@ class Controller extends Package
     public function install()
     {
         if (version_compare(phpversion(), $this->phpVersionRequired, '<')) {
-            throw new \Exception('This package requires a minimum PHP version of '.$this->phpVersionRequired.' to run correctly.');
+            throw new \Exception(t('This package requires a minimum PHP version of '.$this->phpVersionRequired.' to run correctly.'));
         }
         $pkg = parent::install();
         $this->installOrUpgrade($pkg);
@@ -69,9 +67,8 @@ class Controller extends Package
         parent::uninstall();
 
         // Remove glb and gltf from allowed file manager types
-        $app = Application::getFacadeApplication();
-        $config = $app->make('config');
-        $helper_file = $app->make('helper/concrete/file');
+        $config = $this->app->make('config');
+        $helper_file = $this->app->make('helper/concrete/file');
         
         $file_access_file_types = $helper_file->unserializeUploadFileExtensions($config->get('concrete.upload.extensions'));
 
@@ -88,12 +85,21 @@ class Controller extends Package
 
     public function on_start(){
         $al = AssetList::getInstance();
-        $al->register('javascript', 'abwd-model-viewer', 'js/viewer.min.js', array('version' => '1.0.0'), 'abwd_model_viewer');
-        $al->register('css', 'abwd-model-viewer', 'css/viewer.min.css', array('version' => '1.0.0'), 'abwd_model_viewer');
+        $al->register('javascript', 'abwd-model-viewer', 'js/viewer.min.js', array('version' => $this->pkgVersion), 'abwd_model_viewer');
+        $al->register('css', 'abwd-model-viewer', 'css/viewer.min.css', array('version' => $this->pkgVersion), 'abwd_model_viewer');
         $al->register('javascript-inline', 'meshopt-support', 'self.ModelViewerElement = self.ModelViewerElement || {}; self.ModelViewerElement.meshoptDecoderLocation = "https://cdn.jsdelivr.net/npm/meshoptimizer/meshopt_decoder.js"', array('version' => '0.20.0', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false), 'abwd_model_viewer');
 
+        // Google Model Viewer - Version 3.5.0
+        // License: https://github.com/google/model-viewer/blob/master/LICENSE (Apache 2.0)
         $o = new JavascriptModuleAsset('google-model-viewer');
         $o->register('https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js', array('version' => '3.5.0'), 'abwd_model_viewer');
         $al->registerAsset($o);
+
+        $al->registerGroup('abwd-model-viewer', array(
+            array('javascript','abwd-model-viewer'),
+            array('css','abwd-model-viewer'),
+            array('javascript-inline','meshopt-support'),
+            array('javascript-module','google-model-viewer')
+        ));
     }
 }

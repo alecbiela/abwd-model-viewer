@@ -72,22 +72,6 @@ window.onload = (() => {
                     viewer.setAttribute('interaction-prompt', 'none');
                 });
             }
-
-            // Error handling for model loading
-            viewer.addEventListener('error', (e) => {
-                switch(e.detail.type){
-                    case 'loadfailure': // model failed to load
-                        viewer.querySelector('.error-msg').textContent = 'The 3D model failed to load.';
-                        break;
-                    case 'webglcontextlost': // webGL context was suddenly lost
-                        viewer.querySelector('.error-msg').textContent = 'The webGL context was lost.';
-                        break;
-                    default: // unknown/miscellaneous error
-                        viewer.querySelector('.error-msg').textContent = 'An unknown or unexpected error occurred.';
-                        break;
-                }
-                viewer.classList.add('has-error');
-            });
         }
     };
     init();

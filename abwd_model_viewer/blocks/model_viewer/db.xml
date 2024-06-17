@@ -9,10 +9,6 @@
             <unsigned/>
             <default value="0" />
         </field>
-        <field name="binaryFileID" type="integer">
-            <unsigned/>
-            <default value="0" />
-        </field>
         <field name="posterFileID" type="integer">
             <unsigned/>
             <default value="0" />

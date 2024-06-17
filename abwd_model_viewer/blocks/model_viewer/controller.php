@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Package\AbwdModelViewer\Block\ModelViewer;
 use Concrete\Core\Block\BlockController;
-use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\File\File;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -13,7 +12,7 @@ class Controller extends BlockController {
     protected $btSupportsInlineEdit = false;
     protected $btInterfaceWidth = "700";
     protected $btInterfaceHeight = "600";
-    protected $btExportFileColumns = ['fileID', 'binaryFileID', 'posterFileID'];
+    protected $btExportFileColumns = ['fileID', 'posterFileID'];
 
     protected $btCacheBlockRecord = true;
     protected $btCacheBlockOutput = false;
@@ -44,13 +43,21 @@ class Controller extends BlockController {
         $modelFile = $this->getFileObject($model);
         if(strtolower($modelFile->getExtension()) !== 'glb' && strtolower($modelFile->getExtension()) !== 'gltf'){
             $err->add(t('Invalid model file - you must use a model with a .glb or a .gltf file extension.'));
-            return;
-        }else $attrArr[] = 'src="'.$modelFile->getURL().'"';
+        }else {
+            $attrArr[] = 'src="'.$modelFile->getURL().'"';
+        }
 
         if(max(0, (int) $poster) > 0){
             $attrArr[] = 'poster="'.$this->getFileObject($poster)->getURL().'"';
+        } else {
+            $err->add(t('You must specify a poster image.'));
         }
-        $attrArr[] = 'alt="'.$data["model"]["alt"].'"';
+
+        if($data["model"]["alt"] !== '') {
+            $attrArr[] = 'alt="'.$data["model"]["alt"].'"';
+        } else {
+            $err->add(t('You must specify alternative text.'));
+        }
         $attrArr[] = 'loading="'.$data["model"]["loadingType"].'"';
         $attrArr[] = 'reveal="'.$data["model"]["activationType"].'"';
       
@@ -73,6 +80,9 @@ class Controller extends BlockController {
         if($data["style"]["backgroundColor"] !== '') $styleArr[] = 'background: '.$data["style"]['backgroundColor'].';';
         if($data["style"]["isResponsive"]) $classArr[] = 'responsive';
         else{
+            if($data["style"]["dimensionWidthValue"] === '' || $data["style"]["dimensionHeightValue"] === ''){
+                $err->add(t('You must specify a width and height when responsive styling is disabled.'));
+            }
             $units = array('px'=>'px', 'pc'=>'%');
             $styleArr[] = 'width: '.$data["style"]["dimensionWidthValue"].$units[$data["style"]["dimensionWidthUnits"]].';';
             $styleArr[] = 'height: '.$data["style"]["dimensionHeightValue"].$units[$data["style"]["dimensionHeightUnits"]].';';
@@ -103,11 +113,12 @@ class Controller extends BlockController {
 
     /**
      * Format args for storage in a single database column
+     * Note that the file IDs (poster and model) are stored in their own columns
+     * to ensure they are dynamic when exported (such as when exporting/importing site content)
      */
     private function formatArgs($data){
         $bSettings = [
             "model" => [
-                "type" => $data["type"],
                 "alt" => $data["alt"],
                 "activationType" => $data["activationType"],
                 "loadingType" => $data["loadingType"]
@@ -166,10 +177,8 @@ class Controller extends BlockController {
      * Builds attribute string and saves data to the database
      */
     public function save($data){
-        //TODO: validation for certain required elements (i.e. responsive styling OR set width and height)
         // $err is passed by reference to the functions below
-        $app = Application::getFacadeApplication();
-        $err = $app->make('helper/validation/error');
+        $err = $this->app->make('helper/validation/error');
 
         // Model file is required at a bare minimum
         if(max(0, (int) $data['fileID']) > 0){
@@ -177,13 +186,14 @@ class Controller extends BlockController {
             $aString = $this->buildAttrString($bSettings, $data["fileID"], $data["posterFileID"], $err);
             $args = [
                 'fileID' => max(0, (int) $data['fileID']),
-                'binaryFileID' => max(0, (int) $data['binaryFileID']),
                 'posterFileID' => max(0, (int) $data['posterFileID']),
                 'bSettings' => json_encode($bSettings),
                 'aString' => $aString
             ];
         } else $err->add(t('You must specify a 3D model file.'));
 
+        // If any errors were found during the saving process, do not save the block
+        // and output the errors to the user instead
         if($err->has()){
             print t('There were errors with saving the 3D Model Block:');
             $err->output();
@@ -206,13 +216,12 @@ class Controller extends BlockController {
             ],
             'model' => [
                 'alt' => '',
-                'type' => 'glb',
                 'loadingType' => 'auto',
                 'activationType' => 'auto'
             ],
             'style' => [
                 'styling' => 'minimal',
-                'isResponsive' => false,
+                'isResponsive' => true,
                 'backgroundColor' => '',
                 'dimensionWidthUnits' => 'px',
                 'dimensionHeightUnits' => 'px',
@@ -249,7 +258,6 @@ class Controller extends BlockController {
         );
         $this->set('blockData', $defaults);
         $this->set('fileID', null);
-        $this->set('binaryFileID', null);
         $this->set('posterFileID', null);
     }
 
@@ -277,7 +285,6 @@ class Controller extends BlockController {
         }
         $this->set('blockData', $blockData);
         $this->set('fileID', $this->fileID);
-        $this->set('binaryFileID', $this->binaryFileID);
         $this->set('posterFileID', $this->posterFileID);
     }
 
@@ -293,11 +300,6 @@ class Controller extends BlockController {
      * Registers necessary css and javascript for the block
      */
     public function registerViewAssets($outputContent = ''){
-        // Concrete doesn't natively support type="module", so can't use the asset loader
-        //https://github.com/google/model-viewer/blob/master/LICENSE
-        $this->requireAsset('javascript-inline', 'meshopt-support');
-        $this->requireAsset('javascript-module', 'google-model-viewer');
-        $this->requireAsset('javascript', 'abwd-model-viewer');
-        $this->requireAsset('css', 'abwd-model-viewer');
+        $this->requireAsset('abwd-model-viewer');
     }
 }

@@ -25,7 +25,7 @@
             </div>
             <div class="reset">
                 <button class="reset-model-button" type="button">
-                    <i class="abwd-mv-icon-cw" aria-hidden="true"></i> Reset
+                    <i class="abwd-mv-icon-cw" aria-hidden="true"></i> <?= t('Reset'); ?>
                 </button>
             </div>
             <?php 
@@ -41,8 +41,28 @@
         <div class="error-overlay">
             <div class="error-text">
                 <i class="abwd-mv-icon-attention" aria-hidden="true"></i>
-                <p>Error<br/><small class="error-msg">An error has occurred.</small></p>
+                <p><?= t('Error'); ?><br/><small class="error-msg"><?= t('An error has occurred.'); ?></small></p>
             </div>
         </div>
     </model-viewer>
 </div>
+<script>
+    window.onload = (function(){
+        'use strict';
+        // Translatable error messages for the model viewer
+        document.querySelector('#model_viewer_3d_<?= $bID; ?>').addEventListener('error', (e) => {
+            switch(e.detail.type){
+                case 'loadfailure':
+                    viewer.querySelector('.error-msg').textContent = `<?= t('The 3D model failed to load.'); ?>`;
+                    break;
+                case 'webglcontextlost':
+                    viewer.querySelector('.error-msg').textContent = `<?= t('The webGL context was lost.'); ?>`;
+                    break;
+                default:
+                    viewer.querySelector('.error-msg').textContent = `<?= t('An unknown or unexpected error occurred.'); ?>`;
+                    break;
+            }
+            viewer.classList.add('has-error');
+        });
+    });
+</script>

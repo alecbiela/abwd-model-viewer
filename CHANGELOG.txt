@@ -1,0 +1,13 @@
+Version 0.9.1
+--------------
+-Package controller no longer imports Application, instead hooks into $this->app
+-Registered asset versions synced to package version
+-Remove all instances to "binaryFileID" (including db table)
+-Enclose all displayed text strings in t()
+-Enclose javascript within form.php in a closure
+-Move license files around
+-Group assets into a ConcreteCMS AssetGroup and require it instead of the individual assets
+-Adjust default sizing options to be responsive
+-Remove "Model Type" option in block form
+-Add more form validation when saving the block
+-Update readme

@@ -8,8 +8,8 @@ to display a 3D model in GL Transmission Format (GLTF) and adjust various parame
 
 ## Installation
 Before attempting to install this add-on, ensure the following requirements are met:
-* **Concrete5/ConcreteCMS:** Version `9.3.2` or later (Note: This is the current CMS version; additional versions will be tested for backwards compatibility).
-* **PHP:** Version `7.4.36` or later.
+* Concrete5/ConcreteCMS: Version `9.3.2` or later (Note: This is the current CMS version; additional versions will be tested for backwards compatibility).
+* PHP: Version `7.4.36` or later.
 
 To install the package, perform the following steps:
 1. Copy the `abwd_model_viewer` folder into your website's `packages` folder.

@@ -10,7 +10,7 @@ use Concrete\Core\Support\Facade\Application;
  * Already Defined:
  * $controller - Block Controller instance
  * $form - Form Helper (Instance of class at concrete/src/Form/Service/Form.php)
- * $fileID, $binaryFileID, $posterFileID - will be null if adding a new block
+ * $fileID, $posterFileID - will be null if adding a new block
  * $blockData - Existing data (if editing block) or defaults
  */
 $app = Application::getFacadeApplication();
@@ -22,11 +22,11 @@ $fileManager = $app->make(FileManager::class);
 
 <nav aria-label="Block Editor Form Sections">
   <div class="nav nav-tabs" id="nav-tab" role="tablist">
-    <button class="nav-link active" id="nav-model-tab" data-bs-toggle="tab" data-bs-target="#nav-model" type="button" role="tab" aria-controls="nav-model" aria-selected="true">Model</button>
-    <button class="nav-link" id="nav-controls-tab" data-bs-toggle="tab" data-bs-target="#nav-controls" type="button" role="tab" aria-controls="nav-controls" aria-selected="false">Controls</button>
-    <button class="nav-link" id="nav-style-tab" data-bs-toggle="tab" data-bs-target="#nav-style" type="button" role="tab" aria-controls="nav-style" aria-selected="false">Style</button>
-    <button class="nav-link" id="nav-accessibility-tab" data-bs-toggle="tab" data-bs-target="#nav-accessibility" type="button" role="tab" aria-controls="nav-accessibility" aria-selected="false">Accessibility</button>
-    <button class="nav-link" id="nav-ar-tab" data-bs-toggle="tab" data-bs-target="#nav-ar" type="button" role="tab" aria-controls="nav-ar" aria-selected="false">AR</button>
+    <button class="nav-link active" id="nav-model-tab" data-bs-toggle="tab" data-bs-target="#nav-model" type="button" role="tab" aria-controls="nav-model" aria-selected="true"><?= t('Model'); ?></button>
+    <button class="nav-link" id="nav-controls-tab" data-bs-toggle="tab" data-bs-target="#nav-controls" type="button" role="tab" aria-controls="nav-controls" aria-selected="false"><?= t('Controls'); ?></button>
+    <button class="nav-link" id="nav-style-tab" data-bs-toggle="tab" data-bs-target="#nav-style" type="button" role="tab" aria-controls="nav-style" aria-selected="false"><?= t('Style'); ?></button>
+    <button class="nav-link" id="nav-accessibility-tab" data-bs-toggle="tab" data-bs-target="#nav-accessibility" type="button" role="tab" aria-controls="nav-accessibility" aria-selected="false"><?= t('Accessibility'); ?></button>
+    <button class="nav-link" id="nav-ar-tab" data-bs-toggle="tab" data-bs-target="#nav-ar" type="button" role="tab" aria-controls="nav-ar" aria-selected="false"><?= tc('Augmented Reality', 'AR'); ?></button>
   </div>
 </nav>
 <div class="tab-content" id="nav-tabContent">
@@ -35,23 +35,13 @@ $fileManager = $app->make(FileManager::class);
         <legend><?= t('Model Information'); ?></legend>
         <div class="row mb-3">
             <div class="col-6">
-                <?= $form->label('type', t('Model Type')); ?>
-                <?= $form->select('type', array('glb'=>'GL Binary (.glb) Package','gltf'=>'glTF (.gltf) File'), $blockData["model"]["type"]); ?>
+                <?= $form->label('fileID', t('Model File')); ?>
+                <?= $fileManager->file('ccm-b-file', 'fileID', t('Choose Model File'), $fileID); ?>
             </div>
             <div class="col-6">
                 <?= $form->label('posterFileID', t('Poster Image')); ?>
                 <?= $fileManager->image('ccm-b-poster-file', 'posterFileID', t('Choose Poster Image'), $posterFileID); ?>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-6">
-                <?= $form->label('fileID', t('Model File')); ?>
-                <?= $fileManager->file('ccm-b-file', 'fileID', t('Choose Model File'), $fileID); ?>
-            </div>
-            <?php /*<div class="col-6">
-                <?= $form->label('binaryFileID', t('Model Binary (.bin)')); ?>
-                <?= $fileManager->file('ccm-b-binary-file', 'binaryFileID', t('Choose Model Binary'), $binaryFileID); ?>
-            </div> */ ?>
         </div>
         <div class="form-group">
             <?= $form->label('alt', t('Alternative Text')); ?>
@@ -235,32 +225,34 @@ $fileManager = $app->make(FileManager::class);
   </div>
 </div>
 <script>
-    'use strict';
+    $(function(){
+        'use strict';
 
-    // Event listeners
-    $('#orbitSensitivity').on('input',function(){
-        $('#orbitSensitivity_display').text(this.value);
-    });
-    $('#zoomSensitivity').on('input',function(){
-        $('#zoomSensitivity_display').text(this.value);
-    });
-    $('#panSensitivity').on('input',function(){
-        $('#panSensitivity_display').text(this.value);
-    });
-    $('#isResponsive').change(function(){
-        if(this.checked) $('.dimensions-input').addClass('disabled').attr('disabled', 'disabled');
-        else $('.dimensions-input').removeClass('disabled').removeAttr('disabled');
-    });
-    $('#enableA11y').change(function(){
-        if(!this.checked) $('.a11y-input').addClass('disabled').attr('disabled', 'disabled');
-        else $('.a11y-input').removeClass('disabled').removeAttr('disabled');
-    });
-    $('#enableAR').change(function(){
-        if(!this.checked) $('.ar-input').addClass('disabled').attr('disabled', 'disabled');
-        else $('.ar-input').removeClass('disabled').removeAttr('disabled');
-    });
+        // Event listeners
+        $('#orbitSensitivity').on('input',function(){
+            $('#orbitSensitivity_display').text(this.value);
+        });
+        $('#zoomSensitivity').on('input',function(){
+            $('#zoomSensitivity_display').text(this.value);
+        });
+        $('#panSensitivity').on('input',function(){
+            $('#panSensitivity_display').text(this.value);
+        });
+        $('#isResponsive').change(function(){
+            if(this.checked) $('.dimensions-input').addClass('disabled').attr('disabled', 'disabled');
+            else $('.dimensions-input').removeClass('disabled').removeAttr('disabled');
+        });
+        $('#enableA11y').change(function(){
+            if(!this.checked) $('.a11y-input').addClass('disabled').attr('disabled', 'disabled');
+            else $('.a11y-input').removeClass('disabled').removeAttr('disabled');
+        });
+        $('#enableAR').change(function(){
+            if(!this.checked) $('.ar-input').addClass('disabled').attr('disabled', 'disabled');
+            else $('.ar-input').removeClass('disabled').removeAttr('disabled');
+        });
 
-    // Sync display values with inputs
-    $('#enableA11y, #isResponsive, #enableAR').trigger('change');
-    $('#orbitSensitivity, #zoomSensitivity, #panSensitivity').trigger('input');
+        // Sync display values with inputs
+        $('#enableA11y, #isResponsive, #enableAR').trigger('change');
+        $('#orbitSensitivity, #zoomSensitivity, #panSensitivity').trigger('input');
+    });
 </script>

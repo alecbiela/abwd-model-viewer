@@ -1,4 +1,4 @@
-ABWD Model Viewer
+ABWD Model Viewer Build Tools
 Copyright 2024 Alec Bielanos
 
 Licensed under the Apache License, Version 2.0 (the "License");
