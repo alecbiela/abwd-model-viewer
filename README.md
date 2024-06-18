@@ -4,12 +4,12 @@ This is the main Bitbucket repository for the "ABWD Model Viewer" add-on for Con
 Google's `<model-viewer>` web component and is in no way affiliated with Google.
 
 Specifically, this package adds a new block, "3D Model Viewer", to the "Multimedia" section of the block editor which allows the user 
-to display a 3D model in GL Transmission Format (GLTF) and adjust various parameters of its control and display.
+to display a 3D model in GL Transmission Format (glTF) and adjust various parameters of its control and display.
 
 ## Installation
 Before attempting to install this add-on, ensure the following requirements are met:
-* Concrete5/ConcreteCMS: Version `9.3.2` or later (Note: This is the current CMS version; additional versions will be tested for backwards compatibility).
-* PHP: Version `7.4.36` or later.
+* Concrete5/ConcreteCMS: Version `8.5.17` or later (Note: Additional versions will be tested for backwards compatibility).
+* PHP: Version `7.4.0` or later.
 
 To install the package, perform the following steps:
 1. Copy the `abwd_model_viewer` folder into your website's `packages` folder.
@@ -19,25 +19,26 @@ To install the package, perform the following steps:
 5. Wait for the page to refresh - You should receive a confirmation that the package was installed.
 
 ### A Note About File Types
-Only GLTF-formatted models may be used in this model viewer; any type other than `.glb` and `.gltf` is not supported, and existing models will need to be converted to GLTF before they may be used. See [The Blender Documentation](https://docs.blender.org/manual/en/latest/addons/import_export/scene_gltf2.html) for more information on GLTF formatting.
+Only glTF-formatted models may be used in this model viewer; any type other than `.glb` and `.gltf` is not supported, and existing models will need to be converted to glTF before they may be used. Free programs such as Blender are capable of exporting your models in this format - see [The Blender Documentation](https://docs.blender.org/manual/en/latest/addons/import_export/scene_gltf2.html) for more information on glTF formatting.
 
-This package will add `.glb` and `.gltf` to the allowed upload file types in the CMS (see Dashboard > System & Settings > Files > Allowed File Types).  **It will also remove these types from the allowed types list when the package is uninstalled**. If you still need to upload files with these types 
-after the package is uninstalled, you will need to manually re-add these extensions to that list inside the dashboard.
+This package will add `.glb` and `.gltf` to the allowed upload file types in the CMS (see Dashboard > System & Settings > Files > Allowed File Types).  **It will also remove these types from the allowed types list when the package is uninstalled**. If you still need to upload files with these types after the package is uninstalled, you will need to manually re-add these extensions to that list inside the dashboard.
 
 #### What about binary files?
-Currently, the model viewer does **not** support models with detached binary files (for example, a `.gltf` file with the model information and a separate `.bin` file with the model data). This would require allowing `.bin` files to be uploaded to the File Manager, which can present a security risk especially on Linux servers. 
-Therefore, any uploaded models will need to be bundled into a single `.glb` or `.gltf` file.
+Currently, the model viewer does **not** support models with detached binary files (for example, a `.gltf` file with the model information and separate `.bin` and texture files). This would require allowing `.bin` files to be uploaded to the File Manager, which can present a security risk especially on Linux servers. 
+Therefore, any uploaded models will need to be bundled into a single `.glb` or *embedded*-`.gltf` file.
+
+#### Where to Find Models
+The Khronos Group maintains a repository of sample glTF models [on their GitHub Page](https://github.com/KhronosGroup/glTF-Sample-Assets/blob/main/Models/Models.md). For most of these models, a "Download GLB" button can be found beneath the image on the left side of the table - this can be used to download `.glb` files for testing or use on your own website (the licenses for each model are listed to the right of the image on that page).
 
 ## Configuration Options
 A brief overview of the 3D Model Viewer Block's settings can be found in this section.
 
 ### Model
-* Model Type: Either GLB or GLTF, depending on the file you're going to provide.
-* Poster Image: An image that will show before/during the loading of the model viewer. Also serves as a fallback when the model viewer is not supported on the end user's device.
-* Model File: The model file. Currently, only `.glb` and `.gltf` files are supported.
-* Alternative Text: Descriptive text about the model for users who cannot access/operate the model viewer. Similar to an image's alternative text.
-* Viewer Initialization: Controls when the viewer starts up. If set to automatic, the viewer will typically start up when the page loads (as soon as your model file is loaded on the page). If manual, the poster image will display until the viewer is clicked, at which point it will begin the loading process.
-* Loading Style: Controls when the model file is loaded.
+* Poster Image (**required**): An image that will show before/during the loading of the model viewer. Also serves as a fallback when the model viewer is not supported on the end user's device.
+* Model File (**required**): The model file. Currently, only `.glb` and `.gltf` files are supported.
+* Alternative Text (**required**): Descriptive text about the model for users who cannot access/operate the model viewer. Similar to an image's alternative text.
+* Viewer Initialization: Controls when the viewer starts up. If set to automatic, the viewer will typically start up when the page loads (as soon as your model file is loaded on the page). If manual, the poster image will display until the viewer is clicked, at which point it will begin the loading process. (Default: Automatic)
+* Loading Style: Controls when the model file is loaded. (Default: `Auto`)
   * `Auto`, which will load the model file into the viewer whenever it starts up
   * `Eager` which will load the model file as soon as possible (usually on page load) 
   * `Lazy` which will load the model when the viewer is about to be scrolled into view on the page
@@ -52,7 +53,7 @@ A brief overview of the 3D Model Viewer Block's settings can be found in this se
 ### Style
 * Scene Background Color: Flat color to be displayed behind the model. The default value is transparent, but the model viewer's skybox essentially makes it white by default.
 * Responsive Sizing: Enable responsive scaling of the model viewer based on screen size. The viewer will take up 100% of the width of its parent container (if possible) but will not extend past 80% of the screen's height (to allow room for touch-based scrolling).
-* Width and Height: If responsive sizing is disabled, you may explicitly set a width and height of the model viewer, using pixels (`px`) or percent (`%`) values. Note that using percentages without explicit width/height settings on the block's container may produce unexpected results.
+* Width and Height: If responsive sizing is disabled, you may explicitly set a width and height of the model viewer, using pixels (`px`) or percent (`%`) values. Note that using percentages without explicit width/height settings on the block's container may produce unexpected results. Width and Height are **required** if responsive sizing is turned off.
 
 ### Accessibility
 * Enable Accessible Descriptions: Allows for fine-tuned accessible descriptions of the model; if enabled, you may summarize or describe individual parts of the model for users of assistive technologies, as well as set customized interaction prompt text. 
