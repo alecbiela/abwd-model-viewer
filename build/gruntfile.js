@@ -34,9 +34,13 @@ module.exports = function (grunt) {
 				outputStyle: 'compressed',
 				sourceMap: false	//change to true for development
 			},
-			target: {
+			primary: {
 				src: '<%= dirs.src.sass %>/main.scss',
 				dest: '<%= dirs.dest.css %>/viewer.min.css'
+			},
+			backport: {
+				src: '<%= dirs.src.sass %>/version8-backport.scss',
+				dest: '<%= dirs.dest.css %>/version8-backport.min.css'
 			}
 		},
 		// Combine all JS files into one compressed file (including sub-folders)
@@ -48,9 +52,13 @@ module.exports = function (grunt) {
 				mangle: true,
 				sourceMap: false //change to true for development
 			},
-			target: {
+			primary: {
 				src: ['<%= dirs.src.js %>/main.js'],
 				dest: '<%= dirs.dest.js %>/viewer.min.js'
+			},
+			backport: {
+				src: ['<%= dirs.src.js %>/version8-backport.js'],
+				dest: '<%= dirs.dest.js %>/version8-backport.min.js'
 			}
 		},
 		// Trigger relevant tasks when the files they watch has been changed
@@ -74,8 +82,8 @@ module.exports = function (grunt) {
 	});
 
 	// Setup build tasks aliases
-	grunt.registerTask('build-js', ['jshint', 'uglify']);
-	grunt.registerTask('build-css', ['sass']);
+	grunt.registerTask('build-js', ['jshint', 'uglify:primary', 'uglify:backport']);
+	grunt.registerTask('build-css', ['sass:primary', 'sass:backport']);
 	grunt.registerTask('build', ['build-js', 'build-css']);
 
 	// Default task(s).

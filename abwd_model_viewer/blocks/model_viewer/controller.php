@@ -2,6 +2,7 @@
 namespace Concrete\Package\AbwdModelViewer\Block\ModelViewer;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\File\File;
+use \Config;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -26,6 +27,17 @@ class Controller extends BlockController {
 
     private function getFileObject($id): ?\Concrete\Core\Entity\File\Version {
         return File::getByID($id)->getApprovedVersion();
+    }
+
+    /**
+     * If we are on version 8, include the necessary backporting assets for the block editor
+     */
+    private function backportIfNeeded(){
+        $v = intval(mb_substr(Config::get('concrete.version'), 0, 1));
+        if($v < 9){
+            $this->requireAsset('javascript', 'version-8-backport');
+            $this->requireAsset('css', 'version-8-backport');
+        }
     }
 
     /**
@@ -207,6 +219,7 @@ class Controller extends BlockController {
      * Runs when adding a new instance of this block
      */
     public function add(){
+        $this->backportIfNeeded();
         $defaults = array(
             'ar' => [
                 'enableAR' => false,
@@ -265,6 +278,7 @@ class Controller extends BlockController {
      * Runs when an existing instance of a block is edited
      */
     public function edit(){
+        $this->backportIfNeeded();
         $blockData = json_decode($this->bSettings, true);
         if(!$blockData["accessibility"]["enableA11y"]){
             $blockData["accessibility"]["a11yRules"] = [
@@ -300,6 +314,12 @@ class Controller extends BlockController {
      * Registers necessary css and javascript for the block
      */
     public function registerViewAssets($outputContent = ''){
-        $this->requireAsset('abwd-model-viewer');
+        $v = intval(mb_substr(Config::get('concrete.version'), 0, 1));
+        if($v === 9){
+            $this->requireAsset('abwd-model-viewer-9');
+        } else {
+            $this->requireAsset('abwd-model-viewer-8');
+            $this->addFooterItem('<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>');
+        }
     }
 }

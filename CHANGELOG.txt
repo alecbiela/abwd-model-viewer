@@ -10,4 +10,6 @@ Version 0.9.1
 -Adjust default sizing options to be responsive
 -Remove "Model Type" option in block form
 -Add more form validation when saving the block
+-Add backporting assets (css/js) to enable Version 8.5 CMS compatibility
+-Relax required CMS/PHP versions
 -Update readme
