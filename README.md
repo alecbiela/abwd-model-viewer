@@ -4,7 +4,7 @@ This is the main Bitbucket repository for the "ABWD Model Viewer" add-on for Con
 Google's `<model-viewer>` web component and is in no way affiliated with Google.
 
 Specifically, this package adds a new block, "3D Model Viewer", to the "Multimedia" section of the block editor which allows the user 
-to display a 3D model in GL Transmission Format (glTF) and adjust various parameters of its control and display.
+to display a 3D model and adjust various parameters of its control and display.
 
 ## Installation
 Before attempting to install this add-on, ensure the following requirements are met:
@@ -19,23 +19,23 @@ To install the package, perform the following steps:
 5. Wait for the page to refresh - You should receive a confirmation that the package was installed.
 
 ### A Note About File Types
-Only glTF-formatted models may be used in this model viewer; any type other than `.glb` and `.gltf` is not supported, and existing models will need to be converted to glTF before they may be used. Free programs such as Blender are capable of exporting your models in this format - see [The Blender Documentation](https://docs.blender.org/manual/en/latest/addons/import_export/scene_gltf2.html) for more information on glTF formatting.
+Only GLB-formatted models may be used in this model viewer; any type other than `.glb` is not supported, and existing models will need to be converted to GLB before they may be used. Free programs such as Blender are capable of exporting your models in this format - see [The Blender Documentation](https://docs.blender.org/manual/en/latest/addons/import_export/scene_gltf2.html) for more information on GLB formatting.
 
-This package will add `.glb` and `.gltf` to the allowed upload file types in the CMS (see Dashboard > System & Settings > Files > Allowed File Types).  **It will also remove these types from the allowed types list when the package is uninstalled**. If you still need to upload files with these types after the package is uninstalled, you will need to manually re-add these extensions to that list inside the dashboard.
+This package will add `.glb` to the allowed upload file types in the CMS (see Dashboard > System & Settings > Files > Allowed File Types).  **It will also remove these types from the allowed types list when the package is uninstalled**. If you still need to upload files with these types after the package is uninstalled, you will need to manually re-add these extensions to that list inside the dashboard.
 
-#### What about binary files?
+#### What about separate binary files?
 Currently, the model viewer does **not** support models with detached binary files (for example, a `.gltf` file with the model information and separate `.bin` and texture files). This would require allowing `.bin` files to be uploaded to the File Manager, which can present a security risk especially on Linux servers. 
-Therefore, any uploaded models will need to be bundled into a single `.glb` or *embedded*-`.gltf` file.
+Therefore, any uploaded models will need to be bundled into a single `.glb` file.
 
 #### Where to Find Models
-The Khronos Group maintains a repository of sample glTF models [on their GitHub Page](https://github.com/KhronosGroup/glTF-Sample-Assets/blob/main/Models/Models.md). For most of these models, a "Download GLB" button can be found beneath the image on the left side of the table - this can be used to download `.glb` files for testing or use on your own website (the licenses for each model are listed to the right of the image on that page).
+The Khronos Group maintains a repository of sample models [on their GitHub Page](https://github.com/KhronosGroup/glTF-Sample-Assets/blob/main/Models/Models.md). For most of these models, a "Download GLB" button can be found beneath the image on the left side of the table - this can be used to download `.glb` files for testing or use on your own website (the licenses for each model are listed to the right of the image on that page).
 
 ## Configuration Options
 A brief overview of the 3D Model Viewer Block's settings can be found in this section.
 
 ### Model
 * Poster Image (**required**): An image that will show before/during the loading of the model viewer. Also serves as a fallback when the model viewer is not supported on the end user's device.
-* Model File (**required**): The model file. Currently, only `.glb` and `.gltf` files are supported.
+* Model File (**required**): The model file. Currently, only `.glb` files are supported.
 * Alternative Text (**required**): Descriptive text about the model for users who cannot access/operate the model viewer. Similar to an image's alternative text.
 * Viewer Initialization: Controls when the viewer starts up. If set to automatic, the viewer will typically start up when the page loads (as soon as your model file is loaded on the page). If manual, the poster image will display until the viewer is clicked, at which point it will begin the loading process. (Default: Automatic)
 * Loading Style: Controls when the model file is loaded. (Default: `Auto`)

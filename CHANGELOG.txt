@@ -13,3 +13,16 @@ Version 0.9.1
 -Add backporting assets (css/js) to enable Version 8.5 CMS compatibility
 -Relax required CMS/PHP versions
 -Update readme
+
+Version 0.9.2
+--------------
+-Remove support for embedded .gltf files (too confusing for now)
+-Update messaging and docs to remove gltf nomenclature
+-Fix undefined array key when save args are empty
+-Remove bID in block views, switch to a UUID to prevent bID conflicts (such as in stacks)
+-Move file URL generation to view-time in the event that server environment changes
+-Handle model/poster file objects being deleted or invalid with blocks still in-place
+-Add poster image to blocks in clipboard
+-Fix accessibility settings breaking blocks on save
+-Migrate block validation to dedicated validate method
+-Fix issue with viewer's manual initialization (button click) not working

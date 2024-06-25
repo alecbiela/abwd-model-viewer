@@ -1,8 +1,8 @@
 @font-face {
   font-family: 'abwd-model-viewer';
-  src: url('../font/abwd-model-viewer.woff2?63242193');
-  src: url('../font/abwd-model-viewer.woff2?63242193') format('woff2'),
-       url('../font/abwd-model-viewer.woff?63242193') format('woff');
+  src: url('../font/abwd-model-viewer.woff2?75225397');
+  src: url('../font/abwd-model-viewer.woff2?75225397') format('woff2'),
+       url('../font/abwd-model-viewer.woff?75225397') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -59,3 +59,4 @@
 .abwd-mv-icon-minus:before { content: '\e805'; } /* '' */
 .abwd-mv-icon-cw:before { content: '\e806'; } /* '' */
 .abwd-mv-icon-attention:before { content: '\e807'; } /* '' */
+.abwd-mv-icon-arrows-cw:before { content: '\e808'; } /* '' */

@@ -1,8 +1,12 @@
 <?php 
-    defined('C5_EXECUTE') or die('Access Denied.'); 
-    $poster = \Concrete\Core\File\File::getByID($posterFileID)->getApprovedVersion()->getURL();
+    defined('C5_EXECUTE') or die('Access Denied.');
+    $alt = json_decode($bSettings, true)["model"]["alt"];
 ?>
 
-<div id="model_viewer_scrapbook_<?= $bID; ?>">
-    <img src="<?= $poster; ?>" alt="<?= t('3D Model Viewer preview image'); ?>" style="display: block; width: 100%; height: auto; max-height: 300px;" />
+<div id="model_viewer_scrapbook_<?= $mvid; ?>">
+    <?php if(isset($poster)) { ?>
+        <img src="<?= $poster; ?>" alt="<?= t($alt); ?>">
+    <?php } else { ?>
+        <p style="font-size: 36px; padding: 0 10px;"><?= t($alt); ?></p>
+    <?php } ?>
 </div>

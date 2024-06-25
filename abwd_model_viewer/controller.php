@@ -15,12 +15,12 @@ class Controller extends Package
     protected $pkgHandle = 'abwd_model_viewer';
     protected $appVersionRequired = '8.5.17';
     protected $phpVersionRequired = '7.4.0';
-    protected $pkgVersion = '0.9.1';
+    protected $pkgVersion = '0.9.2';
     protected $pkgAutoloaderRegistries = array('src/Asset' => 'Concrete\Package\AbwdModelViewer\Asset');
 
     public function getPackageDescription()
     {
-        return t('Adds a 3D model viewer block to the editor. Supports .glb and embedded .gltf model files.');
+        return t('Adds a 3D model viewer block to the editor. Supports glTF Binary (.glb) model files.');
     }
 
     public function getPackageName()
@@ -37,13 +37,12 @@ class Controller extends Package
             $bt = BlockType::installBlockType('model_viewer', $pkg);
         }
 
-        // Add glb and gltf to allowed file manager types if they aren't yet
+        // Add glb to allowed file manager types if they aren't yet
         $config = $this->app->make('config');
         $helper_file = $this->app->make('helper/concrete/file');
         
         $file_access_file_types = $helper_file->unserializeUploadFileExtensions($config->get('concrete.upload.extensions'));
         if(!in_array('glb', $file_access_file_types)) $file_access_file_types[] = 'glb';
-        if(!in_array('gltf', $file_access_file_types)) $file_access_file_types[] = 'gltf';
 
         $types = $helper_file->serializeUploadFileExtensions($file_access_file_types);
         Config::save('concrete.upload.extensions', $types);
@@ -66,16 +65,13 @@ class Controller extends Package
     public function uninstall(){
         parent::uninstall();
 
-        // Remove glb and gltf from allowed file manager types
+        // Remove glb from allowed file manager types
         $config = $this->app->make('config');
         $helper_file = $this->app->make('helper/concrete/file');
         
         $file_access_file_types = $helper_file->unserializeUploadFileExtensions($config->get('concrete.upload.extensions'));
 
         if (($key = array_search('glb', $file_access_file_types)) !== false) {
-            unset($file_access_file_types[$key]);
-        }
-        if (($key = array_search('gltf', $file_access_file_types)) !== false) {
             unset($file_access_file_types[$key]);
         }
 

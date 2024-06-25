@@ -72,6 +72,13 @@ window.onload = (() => {
                     viewer.setAttribute('interaction-prompt', 'none');
                 });
             }
+                // Hook up viewers that load manually on button click (reveal=manual)
+                const revealButton = viewer.querySelector('.load-3d-model');
+                if(revealButton !== null){
+                    revealButton.addEventListener('click', () => {
+                        viewer.dismissPoster();
+                    });
+                }
         }
     };
     init();

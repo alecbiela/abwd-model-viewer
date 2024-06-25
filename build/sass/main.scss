@@ -42,36 +42,49 @@
         }
 
 
-        .error-overlay{
-            display: none;
+        .load-3d-model-poster{
             position: absolute;
-            z-index: 10;
-            background: #333;
+            left: 0;
+            top: 0;
             width: 100%;
             height: 100%;
-            top: 0;
-            left: 0;
-            .error-text{
-                position: absolute;
-                z-index: 6;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%,-50%);
-                color: white;
-                font-size: 80px;
-                text-align: center;
-                i{display: inline-block; margin: auto;
-                    &::before{margin: 0; padding: 0; width: 80px; height: 80px; display: block;}
-                }
-                p{font-size: 36px;
-                    small{font-size: 20px;}
-                }
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: 10;
+        }
+        .load-3d-model{
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            display: inline-block;
+            padding: 15px;
+            font-size: 20px;
+            line-height: 24px;
+            box-shadow: 0 0 8px rgba(0,0,0,.2), 0 0 4px rgba(0,0,0,.25);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            transition: all 300ms ease;
+            &:hover, &:focus{
+                background: white;
+                color: #333;
             }
         }
+
         &.has-error{
-            .error-overlay{display: block;}
+            display: none;
+            &[poster]{display: block;}
+            .load-3d-model{display: none;}
         }
+
     }
+
+
+
     /* Derived from twbs/bootstrap */
     .sr-only {
         border: 0;
@@ -84,6 +97,10 @@
         width: 1px;
     }
 }
+
+/*.ccm-toolbar-visible .model-viewer.has-error{
+    .error-overlay{display: block;}
+}*/
 
 @media(max-width: 576px){
     .model-container .model-viewer.loaded[ui-buttons] .controls{display: none;}

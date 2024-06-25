@@ -1,23 +1,15 @@
 <?php 
-
 defined('C5_EXECUTE') or die('Access Denied.'); 
 
-use Concrete\Core\Application\Service\FileManager;
-use Concrete\Core\Form\Service\Widget\Color;
-use Concrete\Core\Entity\File\File;
-use Concrete\Core\Support\Facade\Application;
 /**
  * Already Defined:
  * $controller - Block Controller instance
  * $form - Form Helper (Instance of class at concrete/src/Form/Service/Form.php)
  * $fileID, $posterFileID - will be null if adding a new block
  * $blockData - Existing data (if editing block) or defaults
+ * $fileManager - File manager class helper
+ * $color - Color class helper
  */
-$app = Application::getFacadeApplication();
-$color = $app->make(Color::class);
-//Usage: $color->make($inputName, $value, $options = []);
-$fileManager = $app->make(FileManager::class);
-//Usage: $fileManager->file($inputID, $inputName, $chooseText, $preselectedFile = null, $args = [])
 ?>
 <div id="abwd_model_viewer_block_editor">
     <nav aria-label="Block Editor Form Sections">
@@ -35,17 +27,23 @@ $fileManager = $app->make(FileManager::class);
             <legend><?= t('Model Information'); ?></legend>
             <div class="row mb-3">
                 <div class="col-6">
-                    <?= $form->label('fileID', t('Model File')); ?>
-                    <?= $fileManager->file('ccm-b-file', 'fileID', t('Choose Model File'), $fileID); ?>
+                    <label class="control-label form-label" for='ccm-b-file'>
+                        <?= t('Model File') ?> <span style="color: #f00; font-weight: 700;">*</span>
+                    </label>
+                    <?= $fileManager->file('ccm-b-file', 'fileID', t('Choose Model File'), $fileID, array('required'=>'required')); ?>
                 </div>
                 <div class="col-6">
-                    <?= $form->label('posterFileID', t('Poster Image')); ?>
-                    <?= $fileManager->image('ccm-b-poster-file', 'posterFileID', t('Choose Poster Image'), $posterFileID); ?>
+                    <label class="control-label form-label" for='ccm-b-poster-file'>
+                        <?= t('Poster File') ?> <span style="color: #f00; font-weight: 700;">*</span>
+                    </label>
+                    <?= $fileManager->image('ccm-b-poster-file', 'posterFileID', t('Choose Poster Image'), $posterFileID, array('required'=>'required')); ?>
                 </div>
             </div>
             <div class="form-group">
-                <?= $form->label('alt', t('Alternative Text')); ?>
-                <?= $form->text('alt', $blockData["model"]["alt"]); ?>
+                <label class="control-label form-label" for='alt'>
+                    <?= t('Alternative Text') ?> <span style="color: #f00; font-weight: 700;">*</span>
+                </label>
+                <?= $form->text('alt', $blockData["model"]["alt"], array('required'=>'required')); ?>
             </div>
             <div class="form-group">
                 <?= $form->label('activationType', t('Viewer Initialization')); ?>

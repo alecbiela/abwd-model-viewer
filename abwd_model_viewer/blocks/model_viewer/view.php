@@ -1,5 +1,14 @@
-<div id="model_container_3d_<?= $bID; ?>" class="model-container">
-    <model-viewer id="model_viewer_3d_<?= $bID; ?>" <?= $attrString; ?>>
+<?php
+    $srcStr = isset($src) ? sprintf(' src="%s"', $src) : '';
+    $posterStr = isset($poster) ? sprintf(' poster="%s"', $poster) : '';
+    if($srcStr !== '' || $posterStr !== ''){ // Model OR Poster must be defined for block to display
+?>
+<div id="model_container_3d_<?= $mvid; ?>" class="model-container">
+    <model-viewer id="model_viewer_3d_<?= $mvid; ?>" <?= $attrString; ?><?= $srcStr; ?><?= $posterStr; ?>>
+        <?php if(strpos($attrString, 'reveal="manual"') !== false) { ?>
+            <div slot="poster" class="load-3d-model-poster" style="background-image: url(<?= $poster; ?>);" aria-hidden="true"></div>
+            <button slot="poster" class="load-3d-model" type="button"><i class="abwd-mv-icon-arrows-cw" aria-hidden="true"></i>&nbsp;<?= t('Load 3D Model'); ?></button>
+        <?php } ?>
         <div class="controls">
             <div class="zooms">
                 <button class="zoom-out-button" type="button">
@@ -38,31 +47,30 @@
             </div> */ 
             ?>
         </div>
-        <div class="error-overlay">
-            <div class="error-text">
-                <i class="abwd-mv-icon-attention" aria-hidden="true"></i>
-                <p><?= t('Error'); ?><br/><small class="error-msg"><?= t('An error has occurred.'); ?></small></p>
-            </div>
-        </div>
     </model-viewer>
 </div>
 <script>
-    window.onload = (function(){
+    (function(){
         'use strict';
         // Translatable error messages for the model viewer
-        document.querySelector('#model_viewer_3d_<?= $bID; ?>').addEventListener('error', (e) => {
+        document.querySelector('#model_viewer_3d_<?= $mvid; ?>').addEventListener('error', (e) => {
             switch(e.detail.type){
                 case 'loadfailure':
-                    viewer.querySelector('.error-msg').textContent = `<?= t('The 3D model failed to load.'); ?>`;
+                    console.error(`<?= t('The 3D model failed to load. Additional information may be available in errors from the viewer above.'); ?>`);
                     break;
                 case 'webglcontextlost':
-                    viewer.querySelector('.error-msg').textContent = `<?= t('The webGL context was lost.'); ?>`;
+                    console.error(`<?= t('The WebGL context has been lost. Additional information may be available in errors from the viewer above.'); ?>`);
                     break;
                 default:
-                    viewer.querySelector('.error-msg').textContent = `<?= t('An unknown or unexpected error occurred.'); ?>`;
+                console.error(`<?= t('An unknown or unexpected error occurred. Additional information may be available in errors from the viewer above.'); ?>`);
                     break;
             }
-            viewer.classList.add('has-error');
+            e.target.classList.add('has-error');
         });
-    });
+    })();
 </script>
+<?php } else if($c->isEditMode()){ ?>
+    <div class="ccm-edit-mode-disabled-item">
+        <?php echo t('Empty 3D Model Viewer Block.'); ?>
+    </div>
+<?php } ?>
