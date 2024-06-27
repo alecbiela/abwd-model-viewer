@@ -84,7 +84,7 @@ For bug reporting, please submit a ticket to the [Bitbucket Issue Tracker](https
 The Khronos Group maintains a repository of sample models [on their GitHub Page](https://github.com/KhronosGroup/glTF-Sample-Assets/blob/main/Models/Models.md). For most of these models, a "Download GLB" button can be found beneath the image on the left side of the table - this can be used to download `.glb` files for testing or use on your own website (the licenses for each model are listed to the right of the image on that page).
 
 ### Converting Models to glTF Binary (GLB) Format
-Most modern model editing software should have the capability to export your 3D Model(s) as glTF binary packages with the `.glb` file extension. [Blender](https://www.blender.org/) is a popular free and open-source program that supports this. Guides on importing and exporting models to/from Blender are outside the scope of this documentation but are widely available online - as a reminder, you must save your model files in `.glb` format, NOT `.gltf` as they are not supported at this time.
+Most modern 3D modelling software should have the capability to export your 3D Model(s) as glTF binary packages with the `.glb` file extension. [Blender](https://www.blender.org/) is a popular free and open-source program that supports this. Guides on importing and exporting models to/from Blender are outside the scope of this documentation but are widely available online - as a reminder, you must save your model files in `.glb` format, NOT `.gltf` as they are not supported at this time.
 
 ### Original Web Component
 You may view the original project that this add-on was derived from by visiting the [Model Viewer Project Website](https://modelviewer.dev/)
@@ -99,3 +99,6 @@ See `NOTICE.txt` for further information. [View Icon License](https://github.com
 
 This project contains code derived from the ConcreteCMS project, which is distributed under the MIT license.
 See `NOTICE.txt` for further information. [View CCMS License](https://github.com/concretecms/concretecms/blob/master/LICENSE.TXT)
+
+The model viewer web component is Copyright 2024 Google, distributed under the Apache License, version 2.0. 
+This project is in no way affiliated with, nor endorsed by, Google or its subsidiaries. [View Model Viewer License](https://github.com/google/model-viewer/blob/master/LICENSE)
