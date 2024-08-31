@@ -72,12 +72,12 @@ The Model Viewer Block will attempt to stay visible during errors by doing the f
 * If both the model and poster are missing, the block will disappear from view. If this happens, an "Empty 3D Model Block" rectangle will appear in the block's original location when the CMS is in edit mode.
 
 ### Reporting Issues
-For bug reporting, please submit a ticket to the [Bitbucket Issue Tracker](https://bitbucket.org/alecbiela/ccms-model-viewer/issues) and include the following information in your ticket:
+For bug reporting, please submit a ticket to the [GitHub Issue Tracker](https://github.com/alecbiela/abwd-model-viewer/issues) and include the following information in your ticket:
 * What you were trying to do when the issue occurred (what you expected to happen versus what actually happened).
 * Any error text or message(s) displayed at the time of the issue.
 * The steps to reproduce the error, if possible.
 
-(Note: Posting an issue will require registering for a free Bitbucket account if you do not already have one. You may also message me directly on the ConcreteCMS marketplace if you do not wish to do this.)
+(Note: Posting an issue will require registering for a free GitHub account if you do not already have one. You may also message me directly on the ConcreteCMS marketplace if you do not wish to do this.)
 
 ## Resources
 ### Sample Models for Testing
