@@ -13,9 +13,9 @@ use \Concrete\Package\AbwdModelViewer\Asset\JavascriptModuleAsset;
 class Controller extends Package
 {
     protected $pkgHandle = 'abwd_model_viewer';
-    protected $appVersionRequired = '8.5.17';
+    protected $appVersionRequired = '8.5.0';
     protected $phpVersionRequired = '7.4.0';
-    protected $pkgVersion = '0.9.2';
+    protected $pkgVersion = '1.0.1';
     protected $pkgAutoloaderRegistries = array('src/Asset' => 'Concrete\Package\AbwdModelViewer\Asset');
 
     public function getPackageDescription()
@@ -87,10 +87,10 @@ class Controller extends Package
         $al->register('javascript', 'version-8-backport', 'js/version8-backport.min.js', array('version' => $this->pkgVersion), 'abwd_model_viewer');
         $al->register('css', 'version-8-backport', 'css/version8-backport.min.css', array('version' => $this->pkgVersion), 'abwd_model_viewer');
 
-        // Google Model Viewer - Version 3.5.0
+        // Google Model Viewer - Version 4.0.0
         // License: https://github.com/google/model-viewer/blob/master/LICENSE (Apache 2.0)
         $o = new JavascriptModuleAsset('google-model-viewer');
-        $o->register('https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js', array('version' => '3.5.0'), 'abwd_model_viewer');
+        $o->register('https://cdn.jsdelivr.net/npm/@google/model-viewer@4.0.0/dist/model-viewer.min.js', array('version' => '4.0.0'), 'abwd_model_viewer');
         $al->registerAsset($o);
 
         // Two separate groups - only 1 will be required dynamically based on cms version

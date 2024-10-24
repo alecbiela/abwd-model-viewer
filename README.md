@@ -8,7 +8,7 @@ to display a 3D model and adjust various parameters of its control and display.
 
 ## Installation
 Before attempting to install this add-on, ensure the following requirements are met:
-* Concrete5/ConcreteCMS: Version `8.5.17` or later (Note: Additional versions will be tested for backwards compatibility).
+* Concrete5/ConcreteCMS: Version `8.5.0` or later.
 * PHP: Version `7.4.0` or later.
 
 To install the package, perform the following steps:
@@ -88,7 +88,6 @@ Most modern 3D modelling software should have the capability to export your 3D M
 
 ### Original Web Component
 You may view the original project that this add-on was derived from by visiting the [Model Viewer Project Website](https://modelviewer.dev/)
-
 
 ## License
 This add-on and the asset build scripts are Copyright &copy; 2024 Alec Bielanos. They are both distributed under the **Apache License, version 2.0**. Additional details are located in the `LICENSE.txt` file.

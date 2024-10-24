@@ -26,3 +26,11 @@ Version 0.9.2
 -Fix accessibility settings breaking blocks on save
 -Migrate block validation to dedicated validate method
 -Fix issue with viewer's manual initialization (button click) not working
+
+Version 0.9.3
+--------------
+-Relax version requirement to 8.5.0
+
+Version 1.0.1
+--------------
+-Update model viewer library version to 4.0.0 (see https://github.com/google/model-viewer/releases/tag/v4.0.0)
