@@ -1,10 +1,6 @@
 # ConcreteCMS 3D Model Viewer Add-on
-
-This is the main Bitbucket repository for the "ABWD Model Viewer" add-on for ConcreteCMS. The add-on itself is an unofficial port of
-Google's `<model-viewer>` web component and is in no way affiliated with Google.
-
-Specifically, this package adds a new block, "3D Model Viewer", to the "Multimedia" section of the block editor which allows the user 
-to display a 3D model and adjust various parameters of its control and display.
+This package adds a "3D Model Viewer" block to the "Multimedia" section of the block editor, allowing the user 
+to display a 3D model and adjust various parameters of its control and display. The add-on utilizes Google's `<model-viewer>` web component (see "Third-Party Licenses"), but is in no way affiliated with Google.
 
 ## Installation
 Before attempting to install this add-on, ensure the following requirements are met:
